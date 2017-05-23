@@ -6,7 +6,6 @@ import argparse
 
 parser = argparse.ArgumentParser(description='GPU build script')
 parser.add_argument('--cuda-path', type=str, default='/usr/local/cuda-7.5/targets/x86_64-linux/lib/', help='Path to CUDA binaries (try `locate libcudart.so`)')
-parser.add_argument('--path', type=str, default='')
 args = parser.parse_args()
 
 sources = ['src/functions.c', 'src/internals_s.c']
