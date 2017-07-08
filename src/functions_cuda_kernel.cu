@@ -9,79 +9,34 @@
 // there's a way to write shorter code by templating float/double, but without knowing much about template overhead (which I think is small, but not certain) I'm just going to reimplement + vim
 
 __global__ void polygamma_cuda_kernel(int n, int input_sheight, int input_swidth, int output_sheight, int output_swidth, int height, int width, float *input_data, float *output_data) {
-  int index = threadIdx.x;
-  int stride = blockDim.x;
-  for (int i = index; i < width * height; i += stride) {
-    int x = i / width;
-    int y = i % width;
-    int out_address = x * output_swidth + y * output_sheight;
-    int in_address = x * input_swidth + y * input_sheight;
-    output_data[out_address] = polygamma_impl(n, input_data[in_address]);
-  }
+  for (int addr = threadIdx.x; addr < width * height; addr += blockDim.x)
+    output_data[addr] = polygamma_impl(n, input_data[addr]);
 }
 
 __global__ void lgamma_cuda_kernel(int input_sheight, int input_swidth, int output_sheight, int output_swidth, int height, int width, float *input_data, float *output_data) {
-  int index = threadIdx.x;
-  int stride = blockDim.x;
-  for (int i = index; i < width * height; i += stride) {
-    int x = i / width;
-    int y = i % width;
-    int out_address = x * output_swidth + y * output_sheight;
-    int in_address = x * input_swidth + y * input_sheight;
-    output_data[out_address] = lgamma(input_data[in_address]);
-  }
+  for (int addr = threadIdx.x; addr < width * height; addr += blockDim.x)
+    output_data[addr] = lgamma(input_data[addr]);
 }
 
 __global__ void lbeta_cuda_kernel(int a_sheight, int a_swidth, int b_sheight, int b_swidth, int output_sheight, int output_swidth, int height, int width, float *a_data, float *b_data, float *output_data) {
-  int index = threadIdx.x;
-  int stride = blockDim.x;
-  for (int i = index; i < width * height; i += stride) {
-    int x = i / width;
-    int y = i % width;
-    int out_address = x * output_swidth + y * output_sheight;
-    int a_address = x * a_swidth + y * a_sheight;
-    int b_address = x * b_swidth + y * b_sheight;
-    output_data[out_address] = lbeta_impl(a_data[a_address], b_data[b_address]);
-  }
+  for (int addr = threadIdx.x; addr < width * height; addr += blockDim.x)
+    output_data[addr] = lbeta_impl(a_data[addr], b_data[addr]);
 }
 
 __global__ void polygamma_cuda_dbl_kernel(int n, int input_sheight, int input_swidth, int output_sheight, int output_swidth, int height, int width, double *input_data, double *output_data) {
-  int index = threadIdx.x;
-  int stride = blockDim.x;
-  for (int i = index; i < width * height; i += stride) {
-    int x = i / width;
-    int y = i % width;
-    int out_address = x * output_swidth + y * output_sheight;
-    int in_address = x * input_swidth + y * input_sheight;
-    output_data[out_address] = polygamma_impl_dbl(n, input_data[in_address]);
-  }
+  for (int addr = threadIdx.x; addr < width * height; addr += blockDim.x)
+    output_data[addr] = polygamma_impl_dbl(n, input_data[addr]);
 }
 
 __global__ void lgamma_cuda_dbl_kernel(int input_sheight, int input_swidth, int output_sheight, int output_swidth, int height, int width, double *input_data, double *output_data) {
-  int index = threadIdx.x;
-  int stride = blockDim.x;
-  for (int i = index; i < width * height; i += stride) {
-    int x = i / width;
-    int y = i % width;
-    int out_address = x * output_swidth + y * output_sheight;
-    int in_address = x * input_swidth + y * input_sheight;
-    output_data[out_address] = lgamma(input_data[in_address]);
-  }
+  for (int addr = threadIdx.x; addr < width * height; addr += blockDim.x)
+    output_data[addr] = lgamma(input_data[addr]);
 }
 
 __global__ void lbeta_cuda_dbl_kernel(int a_sheight, int a_swidth, int b_sheight, int b_swidth, int output_sheight, int output_swidth, int height, int width, double *a_data, double *b_data, double *output_data) {
-  int index = threadIdx.x;
-  int stride = blockDim.x;
-  for (int i = index; i < width * height; i += stride) {
-    int x = i / width;
-    int y = i % width;
-    int out_address = x * output_swidth + y * output_sheight;
-    int a_address = x * a_swidth + y * a_sheight;
-    int b_address = x * b_swidth + y * b_sheight;
-    output_data[out_address] = lbeta_impl_dbl(a_data[a_address], b_data[b_address]);
-  }
+  for (int addr = threadIdx.x; addr < width * height; addr += blockDim.x)
+    output_data[addr] = lbeta_impl_dbl(a_data[addr], b_data[addr]);
 }
-
 
 #ifdef __cplusplus
 extern "C" {
